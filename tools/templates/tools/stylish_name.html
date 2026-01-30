@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stylish Name Generator</title>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'home/style.css' %}">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">MyDjangoSite</a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/stylish-name-generator/">Generator</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Stylish Name Generator ✨</h1>
+        <p>Enter your name and get stylish variations</p>
+
+        <form method="post">
+            {% csrf_token %}
+            <input type="text" name="name" placeholder="Enter your name" required>
+            <br><br>
+            <button type="submit">Generate</button>
+        </form>
+
+        {% if styled_names %}
+            <h2>Generated Styles</h2>
+
+            <ul class="results">
+                {% for name in styled_names %}
+                    <li>
+                        <span class="result-text">{{ name }}</span>
+                        <button class="copy-btn" onclick="copyText('{{ name }}', this)">
+    Copy
+</button>
+
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+
+    <!-- COPY SCRIPT -->
+   <script>
+    function copyText(text, btn) {
+        navigator.clipboard.writeText(text).then(function () {
+            const originalText = btn.innerText;
+            btn.innerText = "Copied ✓";
+            btn.disabled = true;
+
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }, 1500);
+        });
+    }
+</script>
+
+
+</body>
+</html>
