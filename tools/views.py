@@ -1,96 +1,74 @@
 from django.shortcuts import render
 
-NORMAL = "abcdefghijklmnopqrstuvwxyz"
-
-# ===== FONTS =====
-FONTS = {
-    "Bold": "𝐚𝐛𝐜𝐝𝐞𝐟𝐠𝐡𝐢𝐣𝐤𝐥𝐦𝐧𝐨𝐩𝐪𝐫𝐬𝐭𝐮𝐯𝐰𝐱𝐲𝐳",
-    "Script": "𝓪𝓫𝓬𝓭𝓮𝓯𝓰𝓱𝓲𝓳𝓴𝓵𝓶𝓷𝓸𝓹𝓺𝓻𝓼𝓽𝓾𝓿𝔀𝔁𝔂𝔃",
-    "Double": "𝕒𝕓𝕔𝕕𝕖𝕗𝕘𝕙𝕚𝕛𝕜𝕝𝕞𝕟𝕠𝕡𝕢𝕣𝕤𝕥𝕦𝕧𝕨𝕩𝕪𝕫",
-    "Gothic": "𝔞𝔟𝔠𝔡𝔢𝔣𝔤𝔥𝔦𝔧𝔨𝔩𝔪𝔫𝔬𝔭𝔮𝔯𝔰𝔱𝔲𝔳𝔴𝔵𝔶𝔷",
-    "Wide": "ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ",
-    "Bubble": "ⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩ",
-}
-
-# ===== CATEGORY ORDER =====
-CATEGORY_ORDER = [
-    "royal",
-    "gaming",
-    "cute",
-    "aesthetic",
-    "fancy",
-    "dark"
-]
-
-# ===== DECORATORS =====
-DECORATORS = {
-    "royal": [
-        ("꧁ ", " ꧂"),
-        ("『", "』"),
-        ("【", "】"),
-        ("★ ", " ★"),
-        ("👑 ", " 👑"),
-    ],
-    "gaming": [
-        ("🔥 ", " 🔥"),
-        ("⚡ ", " ⚡"),
-        ("🎮 ", " 🎮"),
-    ],
-    "cute": [
-        ("💖 ", " 💖"),
-        ("🎀 ", " 🎀"),
-    ],
-    "aesthetic": [
-        ("🌸 ", " 🌸"),
-        ("🦋 ", " 🦋"),
-    ],
-    "dark": [
-        ("☠ ", " ☠"),
-        ("😈 ", " 😈"),
-    ],
-    "fancy": [
-        ("", ""),
-    ],
-}
-
-# ===== EXTRA SYMBOL PATTERNS =====
-PATTERNS = [
-    lambda n: f"×͜× {n}",
-    lambda n: f"{n}ツ",
-    lambda n: f"乂{n}乂",
-    lambda n: f"{n}々",
-    lambda n: f"★{n}★",
-    lambda n: f"彡{n}彡",
-]
-
-def stylize(text, font):
-    result = ""
-    for ch in text.lower():
-        if ch in NORMAL:
-            result += font[NORMAL.index(ch)]
-        else:
-            result += ch
-    return result
 
 def stylish_name(request):
-    results = []
+
     name = ""
+    results = []
+    bios = []
 
     if request.method == "POST":
         name = request.POST.get("name", "").strip()
 
         if name:
+
+            # ===== Font Variations =====
+            fonts = [
+                name,
+                name.upper(),
+                name.lower(),
+                f"𝓜{name[1:]}" if len(name) > 1 else name,
+                f"𝕸{name[1:]}" if len(name) > 1 else name,
+                f"𝙈{name[1:]}" if len(name) > 1 else name,
+                f"𝘔{name[1:]}" if len(name) > 1 else name,
+                f"Ｍ{name[1:]}" if len(name) > 1 else name,
+                f"Ⓜ{name[1:]}" if len(name) > 1 else name,
+                f"🄼{name[1:]}" if len(name) > 1 else name,
+            ]
+
+            # ===== Decorations =====
+            left_symbols = [
+                "", "★ ", "🔥 ", "⚡ ",
+                "👑 ", "💖 ", "🎮 ",
+                "☠ ", "✦ ", "꧁ ",
+                "◥ ", "༒ "
+            ]
+
+            right_symbols = [
+                "", " ★", " 🔥", " ⚡",
+                " 👑", " 💖", " 🎮",
+                " ☠", " ✦", " ꧂",
+                " ◤", " ༒"
+            ]
+
+            # ===== Patterns =====
+            patterns = [
+                lambda n: f"×͜× {n}",
+                lambda n: f"{n}ツ",
+                lambda n: f"乂{n}乂",
+                lambda n: f"{n}々",
+                lambda n: f"•{n}•",
+                lambda n: f"★{n}★",
+                lambda n: f"彡{n}彡",
+                lambda n: f"✧{n}✧",
+                lambda n: f"『{n}』",
+                lambda n: f"【{n}】",
+            ]
+
             seen = set()
 
-            # ===== GENERATE IN ORDER =====
-            for category in CATEGORY_ORDER:
-                wrappers = DECORATORS.get(category, [])
+            # Categories rotation
+            categories = ["gaming", "cute", "royal", "dark", "fancy"]
 
-                for font in FONTS.values():
-                    base = stylize(name, font)
+            # ===== Generate styles =====
+            for i, base in enumerate(fonts):
 
-                    for left, right in wrappers:
-                        styled = f"{left}{base}{right}"
+                category = categories[i % len(categories)]
+
+                # Decoration styles
+                for l in left_symbols:
+                    for r in right_symbols:
+                        styled = f"{l}{base}{r}"
 
                         if styled not in seen:
                             seen.add(styled)
@@ -99,19 +77,36 @@ def stylish_name(request):
                                 "category": category
                             })
 
-                    # add symbol styles in fancy
-                    if category == "fancy":
-                        for pattern in PATTERNS:
-                            styled = pattern(base)
+                # Pattern styles
+                for pattern in patterns:
+                    styled = pattern(base)
 
-                            if styled not in seen:
-                                seen.add(styled)
-                                results.append({
-                                    "text": styled,
-                                    "category": "fancy"
-                                })
+                    if styled not in seen:
+                        seen.add(styled)
+                        results.append({
+                            "text": styled,
+                            "category": category
+                        })
+
+            # Limit output for performance
+            results = results[:500]
+
+            # ===== Bio Generator =====
+            bio_templates = [
+                "🔥 Gamer {name}",
+                "✨ Official {name}",
+                "🎯 Headshot Lover",
+                "🚀 Future Star",
+                "💖 Living My Dream",
+                "🎮 Gaming Zone",
+                "👑 Born To Win",
+                "💫 Stay Legendary",
+            ]
+
+            bios = [b.format(name=name) for b in bio_templates]
 
     return render(request, "tools/stylish_name.html", {
         "results": results,
+        "bios": bios,
         "name": name
     })
