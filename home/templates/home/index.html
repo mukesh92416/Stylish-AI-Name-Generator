@@ -5,7 +5,11 @@
     
     <title>Stylish Name Generator & Free Tools | MyDjangoSite</title>
 {% load static %}
-<link rel="stylesheet" href="{% static 'home/style.css' %}">
+
+
+<link rel="stylesheet" href="{% static 'home/style.css' %}?">
+
+
 
 
     <meta name="description" content="Generate stylish names, fancy text, and cool usernames for Instagram, gaming, and social media. Free stylish name generator tool.">
@@ -20,31 +24,43 @@
 
 <body>
 
-    <!-- NAVBAR -->
-    <div class="navbar">
-        <div class="nav-container">
-            <a href="/" class="nav-logo">MyDjangoSite</a>
-            <div class="nav-links">
-                <a href="/">Home</a>
-                <a href="/stylish-name-generator/">Generator</a>
-            </div>
-        </div>
+<!-- NAVBAR -->
+<div class="navbar">
+  <div class="nav-container">
+    <a href="/" class="nav-logo">MyDjangoSite</a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/stylish-name-generator/">Generator</a>
     </div>
+  </div>
+</div>
 
-    <div class="container">
-        <h1>Welcome to My Django Website 🚀</h1>
-        <p>This is my home page</p>
+<!-- HERO SECTION -->
+<section class="hero">
+  <div class="hero-content">
+    <h1 class="hero-title">
+      Stylish Name Generator 🚀
+    </h1>
+    <p class="hero-subtitle">
+      Create stylish names for social media & gaming
+    </p>
+    <a href="/stylish-name-generator/" class="hero-btn">
+      Go to Stylish Name Generator
+    </a>
+  </div>
+</section>
 
-        <a href="/stylish-name-generator/" class="btn">
-            Go to Stylish Name Generator
-        </a>
-    </div>
-    <h2>About Stylish Name Generator</h2>
-<p>
-This stylish name generator helps you convert normal text into fancy Unicode fonts.
-You can use these stylish names for Instagram bios, gaming usernames, and social media profiles.
-</p>
-
+<!-- ABOUT SECTION -->
+<section class="about">
+  <h2>About Stylish Name Generator</h2>
+  <p>
+    This stylish name generator helps you convert normal text into fancy Unicode fonts.
+    You can use these stylish names for Instagram bios, gaming usernames,
+    and social media profiles.
+  </p>
+</section>
 
 </body>
+
+
 </html>
