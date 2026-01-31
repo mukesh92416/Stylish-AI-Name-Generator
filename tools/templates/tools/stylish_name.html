@@ -1,38 +1,100 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>Stylish Name Generator</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'home/style.css' %}?">
+    <link rel="stylesheet" href="{% static 'home/style.css' %}">
 </head>
 <body>
+    <!-- NAVBAR -->
+<div class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-logo">MyDjangoSite</a>
 
-<div class="container">
-    <h1 class="title">S𝘵𝘺𝘭𝘪𝘴𝘩 N𝘢𝘮𝘦 G𝘦𝘯𝘦𝘳𝘢𝘵𝘰𝘳</h1>
-
-    <form method="post" class="form">
-        {% csrf_token %}
-        <input type="text" name="name" placeholder="Enter your name" required value="{{ name }}">
-        <button type="submit">Generate</button>
-    </form>
-
-    {% if results %}
-        <div class="results">
-            {% for item in results %}
-                <div class="result-card">
-                    <span>{{ item.text }}</span>
-                    <button onclick="copyText('{{ item.text }}')">Copy</button>
-                </div>
-            {% endfor %}
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/stylish-name-generator/">Generator</a>
         </div>
-    {% endif %}
+    </div>
 </div>
 
+
+<section class="hero">
+    <h1>Stylish Name Generator ✨</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="name" placeholder="Enter name" value="{{ name }}" required>
+        <button type="submit">Generate</button>
+    </form>
+</section>
+
+{% if results %}
+<!-- FILTER BUTTONS -->
+ <button class="copy-all-btn" onclick="copyAll()">Copy All Styles</button>
+
+<div class="filters">
+    <button onclick="filterResults('all')" class="active">All</button>
+    <button onclick="filterResults('gaming')">🎮 Gaming</button>
+    <button onclick="filterResults('cute')">💖 Cute</button>
+    <button onclick="filterResults('royal')">👑 Royal</button>
+    <button onclick="filterResults('dark')">😈 Dark</button>
+    <button onclick="filterResults('aesthetic')">🌸 Aesthetic</button>
+    <button onclick="filterResults('fancy')">✨ Fancy</button>
+</div>
+
+<!-- RESULTS -->
+<div class="results-wrapper">
+    <div class="results">
+
+    {% for item in results %}
+    <div class="result-card" data-category="{{ item.category }}">
+        <span>{{ item.text }}</span>
+        <button onclick="copyText(this)">Copy</button>
+    </div>
+    {% endfor %}
+</div>
+</div>
+{% endif %}
+
 <script>
-function copyText(text) {
-    navigator.clipboard.writeText(text);
+function filterResults(category) {
+    const cards = document.querySelectorAll(".result-card");
+    const buttons = document.querySelectorAll(".filters button");
+
+    buttons.forEach(btn => btn.classList.remove("active"));
+    event.target.classList.add("active");
+
+    cards.forEach(card => {
+        if (category === "all" || card.dataset.category === category) {
+            card.style.display = "flex";
+        } else {
+            card.style.display = "none";
+        }
+    });
+}
+
+function copyText(btn) {
+    navigator.clipboard.writeText(btn.previousElementSibling.innerText);
+    btn.innerText = "Copied ✓";
+    setTimeout(() => btn.innerText = "Copy", 1200);
 }
 </script>
+<script>
+function copyAll() {
+    let texts = document.querySelectorAll(".result-card span");
+    let allText = "";
+
+    texts.forEach(el => {
+        allText += el.innerText + "\n";
+    });
+
+    navigator.clipboard.writeText(allText);
+
+    alert("All styles copied!");
+}
+</script>
+
 
 </body>
 </html>
